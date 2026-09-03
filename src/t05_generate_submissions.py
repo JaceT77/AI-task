@@ -32,13 +32,9 @@ def engineer_features(df: DataFrame) -> DataFrame:
     df_features["quarter"] = df_features["date"].dt.quarter
     df_features["is_weekend"] = df_features["day_of_week"].isin([5, 6]).astype(int)
     df_features["is_high_season"] = df_features["month"].isin([6, 7, 8, 9, 10]).astype(int)
-
     df_features["is_high_market"] = (df_features["market_index"] > 1.056).astype(int)
-
-    # Because weight is now clean, these calculations will succeed
     df_features["distance_x_weight"] = (df_features["distance"] * df_features["weight"]).astype(float)
     df_features["distance_per_100lbs"] = df_features["distance"] / (df_features["weight"] / 100)
-
     df_features["equipment_encoded"] = df_features["equipment"].map(equipment_dict)
     df_features["route_encoded"] = 42
 
@@ -68,9 +64,6 @@ if __name__ == "__main__":
     scaler = joblib.load(filename=target_scaler)
     model = joblib.load(filename=target_model)
 
-    # ==========================================
-    # 1. Generate 12,000 Predictions
-    # ==========================================
     log.info(event="processing main candidate dataset", source=candidate_source)
     df_candidate: DataFrame = pd.read_csv(filepath_or_buffer=candidate_source)
 
@@ -78,18 +71,13 @@ if __name__ == "__main__":
     X_candidate_scaled = scaler.transform(X_candidate)
     df_candidate["predicted_rate"] = model.predict(X_candidate_scaled)
 
-    # Scorer strictly requires only two columns in this exact order
     df_predictions: DataFrame = df_candidate[["load_id", "predicted_rate"]]
     df_predictions.to_csv(path_or_buf=predictions_target, index=False)
     log.info(event="saved primary predictions", target=predictions_target, rows=len(df_predictions))
 
-    # ==========================================
-    # 2. Generate 31-Day December Trend
-    # ==========================================
     log.info(event="generating december trend data")
     december_dates = pd.date_range(start="2025-12-01", end="2025-12-31", freq="D")
 
-    # Locked inputs required by the validation script[cite: 1]
     df_december: DataFrame = pd.DataFrame(
         {
             "pickup": "Lexington",
@@ -98,8 +86,8 @@ if __name__ == "__main__":
             "equipment": "Dry Van",
             "weight": 32000.0,
             "date": december_dates,
-            "market_index": 1.056,  # Baseline
-            "quote_signal": 1,  # Baseline
+            "market_index": 1.056,
+            "quote_signal": 1,
         }
     )
 
@@ -107,11 +95,9 @@ if __name__ == "__main__":
     X_december_scaled = scaler.transform(X_december)
     df_december["predicted_rate"] = model.predict(X_december_scaled)
 
-    # Scorer strictly requires seven columns in this exact order[cite: 1]
     december_columns: list[str] = ["pickup", "delivery", "distance", "equipment", "weight", "date", "predicted_rate"]
     df_december_final: DataFrame = df_december[december_columns]
 
-    # Convert dates back to strings for clean CSV output
     df_december_final["date"] = df_december_final["date"].dt.strftime("%Y-%m-%d")
 
     df_december_final.to_csv(path_or_buf=december_target, index=False)

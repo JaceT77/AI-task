@@ -14,11 +14,9 @@ def generate_pdf() -> None:
     pdf = FPDF()
     pdf.add_page()
 
-    # Header
     pdf.set_font(family="Arial", style="B", size=16)
     pdf.cell(w=0, h=10, txt="Freight Rate ML Prediction Report", ln=True, align="C")
 
-    # Executive Summary
     pdf.set_font(family="Arial", size=12)
     pdf.ln(h=10)
     summary_text: str = (
@@ -28,7 +26,6 @@ def generate_pdf() -> None:
     )
     pdf.multi_cell(w=0, h=8, txt=summary_text)
 
-    # Embedded Chart
     pdf.ln(h=10)
     pdf.set_font(family="Arial", style="B", size=14)
     pdf.cell(w=0, h=10, txt="December 2025 Rate Forecast", ln=True)
