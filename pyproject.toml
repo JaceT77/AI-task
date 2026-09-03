@@ -1,0 +1,28 @@
+[project]
+name = "p"
+version = "0.1.0"
+description = "Freight Rate ML Assessment"
+readme = "README.md"
+authors = [
+    { name = "Jace Trent", email = "jacetrent77@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "pandas>=3.0.5",
+    "scikit-learn>=1.5.0",
+    "joblib>=1.4.0",
+    "reportlab>=5.0.1",
+    "rich>=15.0.0",
+    "structlog>=26.1.0",
+    "pydantic>=2.13.5",
+    "fpdf>=1.7.2",
+]
+
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.5",
+    "ty>=0.0.76",
+]
