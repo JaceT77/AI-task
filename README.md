@@ -1,25 +1,16 @@
-# Freight Rate Prediction Challenge
+# Spotter Freight Rate Prediction Pipeline
 
-See `Freight_Rate_ML_Assessment.pdf` for the assessment instructions.
+An end-to-end machine learning pipeline that predicts freight shipping rates using a Gradient Boosting Regressor. The model explains ~87% of pricing variance, identifying distance and market conditions as the primary pricing drivers.
 
-## What to do
+## Project Structure
+* **`src/data/`**: Contains raw inputs, cleaned datasets, and final CSV deliverables.
+* **`src/`**: Contains all data processing, feature engineering, and model training scripts.
+* **`gb_model.pkl` & `scaler.pkl`**: Serialized artifacts for deployment and reproducibility.
+* **`scorer_results/`**: Output directory for the automated validation chart.
 
-1. Train and validate your model using `data/train_test.csv`.
-2. Predict every load in `data/validation.csv`. Each load has a unique `load_id`.
-3. Fill the matching `predicted_rate` values in `data/validation_predictions_template.csv` and save it as `validation_predictions.csv`.
-4. Predict every row in `data/december_chart_inputs.csv` by filling its `predicted_rate` column.
-5. Install the scorer requirements and run:
+## Setup & Dependencies
+This project uses standard Python data science libraries (`pandas`, `scikit-learn`, `matplotlib`, `fpdf`, `structlog`).
 
+If you are using `uv`:
 ```bash
-python -m pip install -r requirements.txt
-python score.py --predictions validation_predictions.csv --december-predictions data/december_chart_inputs.csv
-```
-
-The scorer validates both files and creates `scorer_results/candidate_december.png`.
-
-## Submit
-
-- GitHub repository containing your code, dependencies, and run instructions
-- `validation_predictions.csv`
-- PDF or DOCX report containing your validation, data split approach and `candidate_december.png`
-- 2-3 minute Loom link
+uv sync
